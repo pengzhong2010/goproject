@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+package thinktank.v1;
+option go_package = "goproject/api/thinktank/v1;v1";
+option (gogoproto.goproto_getters_all) = false;
+
+import "thinktank/v1/common.proto";
+
+service Doc {
+	rpc CreateDoc (CreateDocRequest) returns (UpdateResp) {
+		option (google.api.http) = {
+			post: "/doc/create"
+		};
+	}
+	rpc UpdateDoc (UpdateDocRequest) returns (UpdateResp) {
+		option (google.api.http) = {
+			put: "/doc/update"
+		};
+	};
+	rpc DeleteDoc (IDReq) returns (UpdateResp) {
+		option (google.api.http) = {
+			delete: "/doc/delete"
+		};
+	};
+	rpc GetDoc (IDReq) returns (GetDocReply) {
+		option (google.api.http) = {
+			get: "/doc/get"
+		};
+	};
+	rpc ListDoc (ListDocRequest) returns (ListDocReply) {
+		option (google.api.http) = {
+			get: "/doc/list"
+		};
+	};
+}
+
+message CreateDocRequest {
+	// title
+	string title   = 1 [(gogoproto.jsontag) = 'title', (gogoproto.moretags) = 'validate:"required"'];
+}
+
+message UpdateDocRequest {
+	// id
+	int64  id     = 1 [(gogoproto.jsontag) = 'id', (gogoproto.moretags) = 'validate:"required"'];
+	// title
+	string title   = 2 [(gogoproto.jsontag) = 'title'];
+}
+
+message GetDocReply {
+	// id
+	int64  id     = 1 [(gogoproto.jsontag) = 'id'];
+	// uuid
+	string uuid   = 2 [(gogoproto.jsontag) = 'uuid'];
+	// 标题
+	string title  = 3 [(gogoproto.jsontag) = 'title'];
+	// 创建时间
+	int64  ctime  = 4 [(gogoproto.jsontag) = 'ctime'];
+	// 修改时间
+	int64  mtime  = 5 [(gogoproto.jsontag) = 'mtime'];
+}
+
+message ListDocRequest {
+	// id
+	int64 id          = 1    [(gogoproto.jsontag) = 'id', (gogoproto.moretags) = 'form:"id"'];
+	// 模糊搜索
+	string key        = 2    [(gogoproto.jsontag) = 'key', (gogoproto.moretags) = 'form:"key"'];
+	// title
+	string title      = 3    [(gogoproto.jsontag) = 'title', (gogoproto.moretags) = 'form:"title"'];
+	// 分页
+	int64  pageSize   = 4    [(gogoproto.jsontag) = 'page_size', (gogoproto.moretags) = 'form:"page_size"'];
+	// 分页
+	int64  pageNum    = 5    [(gogoproto.jsontag) = 'page_num', (gogoproto.moretags) = 'form:"page_num"'];
+	// 排序字段
+	string orderby    = 6    [(gogoproto.jsontag) = 'orderby', (gogoproto.moretags) = 'form:"orderby"'];
+	// 排序顺序
+	string asc        = 7    [(gogoproto.jsontag) = 'asc', (gogoproto.moretags) = 'form:"asc"'];
+	// 我的 0.全部 1.我的
+	Mine mine         = 8    [(gogoproto.jsontag) = 'mine', (gogoproto.moretags) = 'form:"mine"'];
+}
+message ListDocReply {
+	repeated DocForList data  = 1 [(gogoproto.jsontag) = 'list'];
+	int64    count            = 2 [(gogoproto.jsontag) = 'count'];
+}
+message DocForList {
+	// id
+	int64  id     = 1 [(gogoproto.jsontag) = 'id'];
+	// uuid
+	string uuid   = 2 [(gogoproto.jsontag) = 'uuid'];
+	// 标题
+	string title  = 3 [(gogoproto.jsontag) = 'title'];
+	// 创建时间
+	int64  ctime  = 4    [(gogoproto.jsontag) = 'ctime'];
+	// 修改时间
+	int64  mtime  = 5    [(gogoproto.jsontag) = 'mtime'];
+}

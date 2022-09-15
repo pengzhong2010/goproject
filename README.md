@@ -1,2 +1,3 @@
-# goproject
-go server 大仓开发模式
+# Goproject
+
+go语言大仓开发模式仓库

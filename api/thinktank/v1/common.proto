@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+package thinktank.v1;
+option go_package = "goproject/api/thinktank/v1;v1";
+option (gogoproto.goproto_getters_all) = false;
+
+message IDReq {
+  // id
+  int64 id = 1 [(gogoproto.jsontag) = 'id', (gogoproto.moretags) = 'form:"id" validate:"required"'];
+}
+
+message IDReqs {
+  // id
+  repeated int64 ids = 1 [(gogoproto.jsontag) = 'ids', (gogoproto.moretags) = 'form:"ids" validate:"required"'];
+}
+
+message BaseReq {
+  // 模糊搜索
+  string key      = 1    [(gogoproto.jsontag) = 'key', (gogoproto.moretags) = 'form:"key"'];
+  // 分页
+  int32  pageSize = 2    [(gogoproto.jsontag) = 'page_size', (gogoproto.moretags) = 'form:"page_size"'];
+  // 分页
+  int32  pageNum  = 3    [(gogoproto.jsontag) = 'page_num', (gogoproto.moretags) = 'form:"page_num"'];
+  // id
+  int64  id       = 4    [(gogoproto.jsontag) = 'id', (gogoproto.moretags) = 'form:"id"'];
+}
+
+message KeyReq {
+  string key = 1 [(gogoproto.moretags) = 'form:"key"'];
+}
+
+message UpdateResp {
+  // 返回信息
+  string message = 1 [(gogoproto.jsontag) = 'message'];
+}
+
+message IDResp {
+  int64 id = 1 [(gogoproto.jsontag) = 'id'];
+}
+
+message MapResp {
+  map<string, string> data = 1 [(gogoproto.jsontag) = 'map'];
+}
+
+message ListReq {
+  // id
+  int64 id            = 1    [(gogoproto.jsontag) = 'id', (gogoproto.moretags) = 'form:"id"'];
+  // 模糊搜索
+  string key          = 2    [(gogoproto.jsontag) = 's', (gogoproto.moretags) = 'form:"s"'];
+  // 分页
+  int64  pageSize     = 3    [(gogoproto.jsontag) = 'page_size', (gogoproto.moretags) = 'form:"page_size"'];
+  // 分页
+  int64  pageNum      = 4    [(gogoproto.jsontag) = 'page_num', (gogoproto.moretags) = 'form:"page_num"'];
+  // 开始时间
+  int64  stime        = 5    [(gogoproto.jsontag) = 'start_date', (gogoproto.moretags) = 'form:"start_date"', (gogoproto.casttype) = "go-common/library/time.Time"];
+  // 结束时间
+  int64  etime        = 6    [(gogoproto.jsontag) = 'end_date', (gogoproto.moretags) = 'form:"end_date"', (gogoproto.casttype) = "go-common/library/time.Time"];
+  // 排序字段
+  string orderby      = 7    [(gogoproto.jsontag) = 'orderby', (gogoproto.moretags) = 'form:"orderby"'];
+  // 排序字段
+  string asc      = 8    [(gogoproto.jsontag) = 'asc', (gogoproto.moretags) = 'form:"asc"'];
+  // 我的
+  int64 mine  = 9    [(gogoproto.jsontag) = 'mine', (gogoproto.moretags) = 'form:"mine"'];
+}
+
+enum Mine {
+  MINE_DEFAULT = 0;
+  MINE_MINE = 1;
+}

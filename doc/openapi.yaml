@@ -1,0 +1,234 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: ""
+    version: 0.0.1
+paths:
+    /doc/create:
+        post:
+            tags:
+                - Doc
+            operationId: Doc_CreateDoc
+            parameters:
+                - name: title
+                  in: query
+                  description: title
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/thinktank.v1.UpdateResp'
+    /doc/delete:
+        delete:
+            tags:
+                - Doc
+            operationId: Doc_DeleteDoc
+            parameters:
+                - name: id
+                  in: query
+                  description: id
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/thinktank.v1.UpdateResp'
+    /doc/get:
+        get:
+            tags:
+                - Doc
+            operationId: Doc_GetDoc
+            parameters:
+                - name: id
+                  in: query
+                  description: id
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/thinktank.v1.GetDocReply'
+    /doc/list:
+        get:
+            tags:
+                - Doc
+            operationId: Doc_ListDoc
+            parameters:
+                - name: id
+                  in: query
+                  description: id
+                  schema:
+                    type: integer
+                    format: int64
+                - name: key
+                  in: query
+                  description: 模糊搜索
+                  schema:
+                    type: string
+                - name: title
+                  in: query
+                  description: title
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  description: 分页
+                  schema:
+                    type: integer
+                    format: int64
+                - name: pageNum
+                  in: query
+                  description: 分页
+                  schema:
+                    type: integer
+                    format: int64
+                - name: orderby
+                  in: query
+                  description: 排序字段
+                  schema:
+                    type: string
+                - name: asc
+                  in: query
+                  description: 排序顺序
+                  schema:
+                    type: string
+                - name: mine
+                  in: query
+                  description: 我的 0.全部 1.我的
+                  schema:
+                    type: integer
+                    format: enum
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/thinktank.v1.ListDocReply'
+    /doc/update:
+        put:
+            tags:
+                - Doc
+            operationId: Doc_UpdateDoc
+            parameters:
+                - name: id
+                  in: query
+                  description: id
+                  schema:
+                    type: integer
+                    format: int64
+                - name: title
+                  in: query
+                  description: title
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/thinktank.v1.UpdateResp'
+    /helloworld/{name}:
+        get:
+            tags:
+                - Greeter
+            description: Sends a greeting
+            operationId: Greeter_SayHello
+            parameters:
+                - name: name
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.HelloReply'
+components:
+    schemas:
+        helloworld.v1.HelloReply:
+            type: object
+            properties:
+                message:
+                    type: string
+            description: The response message containing the greetings
+        thinktank.v1.DocForList:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    description: id
+                    format: int64
+                uuid:
+                    type: string
+                    description: uuid
+                title:
+                    type: string
+                    description: 标题
+                ctime:
+                    type: integer
+                    description: 创建时间
+                    format: int64
+                mtime:
+                    type: integer
+                    description: 修改时间
+                    format: int64
+        thinktank.v1.GetDocReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    description: id
+                    format: int64
+                uuid:
+                    type: string
+                    description: uuid
+                title:
+                    type: string
+                    description: 标题
+                ctime:
+                    type: integer
+                    description: 创建时间
+                    format: int64
+                mtime:
+                    type: integer
+                    description: 修改时间
+                    format: int64
+        thinktank.v1.ListDocReply:
+            type: object
+            properties:
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/thinktank.v1.DocForList'
+                count:
+                    type: integer
+                    format: int64
+        thinktank.v1.UpdateResp:
+            type: object
+            properties:
+                message:
+                    type: string
+                    description: 返回信息
+tags:
+    - name: Doc
+    - name: Greeter
+      description: The greeting service definition.
