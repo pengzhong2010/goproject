@@ -130,6 +130,15 @@ apiserver(){
   exit
 }
 
+apierror(){
+  protoc --proto_path=. \
+         --proto_path=./third_party \
+         --go_out=paths=source_relative:. \
+         --go-errors_out=paths=source_relative:. \
+         api/${serviceName}/v1/${arg}.proto
+  exit
+}
+
 
 case ${cmd} in
   (init)
@@ -176,6 +185,13 @@ case ${cmd} in
       exit
     fi
     apiserver
+    ;;
+  (apierror)
+    if [ $# -ne 3 ]; then
+      echo "args {3} not found"
+      exit
+    fi
+    apierror
     ;;
   (all)
     init

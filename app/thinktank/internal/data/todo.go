@@ -36,12 +36,12 @@ func (r *todoRepo) Save(ctx context.Context, in *biz.Todo) (out *biz.Todo, err e
 	}
 	err = tx.Create(t).Error
 	if err != nil {
-		err = errors.Wrapf(err, "Create Model err")
+		err = errors.Wrap(err, "Create Model err")
 		return
 	}
 	// commit
 	if err = tx.Commit().Error; err != nil {
-		err = errors.Wrapf(err, "commit err")
+		err = errors.Wrap(err, "commit err")
 		return
 	}
 	return

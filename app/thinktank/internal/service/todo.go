@@ -2,9 +2,12 @@ package service
 
 import (
 	"context"
-	"goproject/app/thinktank/internal/biz"
 
 	pb "goproject/api/thinktank/v1"
+	"goproject/app/thinktank/internal/biz"
+
+	"github.com/go-kratos/kratos/v2/log"
+	"github.com/pkg/errors"
 )
 
 type TodoService struct {
@@ -18,15 +21,12 @@ func NewTodoService(uc *biz.TodoUsecase) *TodoService {
 }
 
 func (s *TodoService) CreateTodo(ctx context.Context, req *pb.CreateTodoRequest) (resp *pb.UpdateResp, err error) {
-	err = req.Validate()
-	if err != nil {
-		return
-	}
 	_, err = s.uc.CreateTodo(ctx, &biz.Todo{
 		Title:  req.Title,
 		Detail: req.Detail,
 	})
 	if err != nil {
+		log.Error("CreateChange: %v\n stack trace:\n%+v", errors.Cause(err), err)
 		return
 	}
 	resp = &pb.UpdateResp{}
