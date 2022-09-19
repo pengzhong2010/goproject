@@ -3,32 +3,50 @@
 
 openapi: 3.0.3
 info:
-    title: ""
+    title: Todo API
     version: 0.0.1
 paths:
-    /doc/create:
+    /todo/create:
         post:
             tags:
-                - Doc
-            operationId: Doc_CreateDoc
-            parameters:
-                - name: title
-                  in: query
-                  description: title
-                  schema:
-                    type: string
+                - Todo
+            operationId: Todo_CreateTodo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.thinktank.v1.CreateTodoRequest'
+                required: true
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/thinktank.v1.UpdateResp'
-    /doc/delete:
+                                $ref: '#/components/schemas/api.thinktank.v1.UpdateResp'
+    /todo/delete:
         delete:
             tags:
-                - Doc
-            operationId: Doc_DeleteDoc
+                - Todo
+            operationId: Todo_DeleteTodo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.thinktank.v1.IDReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.thinktank.v1.UpdateResp'
+    /todo/get:
+        get:
+            tags:
+                - Todo
+            operationId: Todo_GetTodo
             parameters:
                 - name: id
                   in: query
@@ -42,31 +60,12 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/thinktank.v1.UpdateResp'
-    /doc/get:
+                                $ref: '#/components/schemas/api.thinktank.v1.GetTodoReply'
+    /todo/list:
         get:
             tags:
-                - Doc
-            operationId: Doc_GetDoc
-            parameters:
-                - name: id
-                  in: query
-                  description: id
-                  schema:
-                    type: integer
-                    format: int64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/thinktank.v1.GetDocReply'
-    /doc/list:
-        get:
-            tags:
-                - Doc
-            operationId: Doc_ListDoc
+                - Todo
+            operationId: Todo_ListTodo
             parameters:
                 - name: id
                   in: query
@@ -118,59 +117,37 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/thinktank.v1.ListDocReply'
-    /doc/update:
+                                $ref: '#/components/schemas/api.thinktank.v1.ListTodoReply'
+    /todo/update:
         put:
             tags:
-                - Doc
-            operationId: Doc_UpdateDoc
-            parameters:
-                - name: id
-                  in: query
-                  description: id
-                  schema:
-                    type: integer
-                    format: int64
-                - name: title
-                  in: query
-                  description: title
-                  schema:
-                    type: string
+                - Todo
+            operationId: Todo_UpdateTodo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.thinktank.v1.UpdateTodoRequest'
+                required: true
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/thinktank.v1.UpdateResp'
-    /helloworld/{name}:
-        get:
-            tags:
-                - Greeter
-            description: Sends a greeting
-            operationId: Greeter_SayHello
-            parameters:
-                - name: name
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/helloworld.v1.HelloReply'
+                                $ref: '#/components/schemas/api.thinktank.v1.UpdateResp'
 components:
     schemas:
-        helloworld.v1.HelloReply:
+        api.thinktank.v1.CreateTodoRequest:
             type: object
             properties:
-                message:
+                title:
                     type: string
-            description: The response message containing the greetings
-        thinktank.v1.DocForList:
+                    description: title
+                detail:
+                    type: string
+                    description: detail
+        api.thinktank.v1.GetTodoReply:
             type: object
             properties:
                 id:
@@ -183,6 +160,9 @@ components:
                 title:
                     type: string
                     description: 标题
+                detail:
+                    type: string
+                    description: detail
                 ctime:
                     type: integer
                     description: 创建时间
@@ -191,44 +171,62 @@ components:
                     type: integer
                     description: 修改时间
                     format: int64
-        thinktank.v1.GetDocReply:
+        api.thinktank.v1.IDReq:
             type: object
             properties:
                 id:
                     type: integer
                     description: id
                     format: int64
-                uuid:
-                    type: string
-                    description: uuid
-                title:
-                    type: string
-                    description: 标题
-                ctime:
-                    type: integer
-                    description: 创建时间
-                    format: int64
-                mtime:
-                    type: integer
-                    description: 修改时间
-                    format: int64
-        thinktank.v1.ListDocReply:
+        api.thinktank.v1.ListTodoReply:
             type: object
             properties:
                 data:
                     type: array
                     items:
-                        $ref: '#/components/schemas/thinktank.v1.DocForList'
+                        $ref: '#/components/schemas/api.thinktank.v1.TodoForList'
                 count:
                     type: integer
                     format: int64
-        thinktank.v1.UpdateResp:
+        api.thinktank.v1.TodoForList:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    description: id
+                    format: int64
+                uuid:
+                    type: string
+                    description: uuid
+                title:
+                    type: string
+                    description: 标题
+                ctime:
+                    type: integer
+                    description: 创建时间
+                    format: int64
+                mtime:
+                    type: integer
+                    description: 修改时间
+                    format: int64
+        api.thinktank.v1.UpdateResp:
             type: object
             properties:
                 message:
                     type: string
                     description: 返回信息
+        api.thinktank.v1.UpdateTodoRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    description: id
+                    format: int64
+                title:
+                    type: string
+                    description: title
+                detail:
+                    type: string
+                    description: detail
 tags:
-    - name: Doc
-    - name: Greeter
-      description: The greeting service definition.
+    - name: Todo

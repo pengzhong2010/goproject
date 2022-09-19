@@ -4,7 +4,7 @@ import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 import "google/protobuf/empty.proto";
 import "google/api/annotations.proto";
 
-package thinktank.v1;
+package api.thinktank.v1;
 option go_package = "goproject/api/thinktank/v1;v1";
 option (gogoproto.goproto_getters_all) = false;
 

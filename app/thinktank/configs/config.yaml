@@ -6,9 +6,14 @@ server:
     addr: 0.0.0.0:9000
     timeout: 1s
 data:
-  database:
-    driver: mysql
-    source: root:root@tcp(127.0.0.1:3306)/test
+  mysql:
+    dsn: root:caidaoninb@tcp(127.0.0.1:33306)/todo?charset=utf8mb4&parseTime=True&loc=Local
+    active: 20
+    idle: 10
+#    idleTimeout: 4h
+#    queryTimeout: 20000ms
+#    execTimeout: 20000ms
+#    tranTimeout: 20000ms
   redis:
     addr: 127.0.0.1:6379
     read_timeout: 0.2s

@@ -15,7 +15,6 @@ needhelp(){
  add                    add api demo proto                 sh tool.sh thinktank add demoxxx
  apiclient              generate one api proto             sh tool.sh thinktank apiclient demoxxx
  apiserver              generate one service file          sh tool.sh thinktank apiserver demoxxx
- doc                    generate api doc                   sh tool.sh thinktank doc
  buildlocal             build for local system             sh tool.sh thinktank buildlocal
  buildlinux             build for linux                    sh tool.sh thinktank buildlinux
  generate               generate                           sh tool.sh thinktank generate
@@ -41,8 +40,6 @@ arg=$3
 INTERNAL_PROTO_FILES=`find ./app/${serviceName}/internal -name "*.proto"`
 API_PROTO_FILES=`find ./api -name "*.proto"`
 
-
-
 init(){
   go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
@@ -62,26 +59,28 @@ config(){
 }
 
 api(){
-  protoc --proto_path=./api \
+  protoc --proto_path=. \
+         --proto_path=./api \
 	       --proto_path=./third_party \
- 	       --go_out=paths=source_relative:./api \
- 	       --go-http_out=paths=source_relative:./api \
- 	       --go-grpc_out=paths=source_relative:./api \
+ 	       --go_out=paths=source_relative:. \
+ 	       --go-http_out=paths=source_relative:. \
+ 	       --go-grpc_out=paths=source_relative:. \
+ 	       --openapi_out=fq_schema_naming=true,default_response=false:./doc \
 	       ${API_PROTO_FILES}
   exit
 }
 
-doc(){
-  mkdir -p ./doc
-  protoc --proto_path=./api \
-	       --proto_path=./third_party \
- 	       --go_out=paths=source_relative:./api \
- 	       --go-http_out=paths=source_relative:./api \
- 	       --go-grpc_out=paths=source_relative:./api \
-	       --openapi_out=fq_schema_naming=true,default_response=false:./doc \
-	       ${API_PROTO_FILES}
-  exit
-}
+#doc(){
+#  mkdir -p ./doc
+#  protoc --proto_path=./api \
+#	       --proto_path=./third_party \
+# 	       --go_out=paths=source_relative:./api \
+# 	       --go-http_out=paths=source_relative:./api \
+# 	       --go-grpc_out=paths=source_relative:./api \
+#	       --openapi_out=fq_schema_naming=true,default_response=false:./doc \
+#	       ${API_PROTO_FILES}
+#  exit
+#}
 
 buildlocal(){
   mkdir -p ./bin && go build -ldflags "-X main.Version=${VERSION}" -o ./bin/${serviceName} ./app/${serviceName}/cmd/${serviceName}/main.go ./app/${serviceName}/cmd/${serviceName}/wire_gen.go
@@ -112,8 +111,17 @@ add(){
 }
 
 apiclient(){
-  kratos proto client api/${serviceName}/v1/${arg}.proto
+  protoc --proto_path=. \
+         --proto_path=./api \
+	       --proto_path=./third_party \
+ 	       --go_out=paths=source_relative:. \
+ 	       --go-http_out=paths=source_relative:. \
+ 	       --go-grpc_out=paths=source_relative:. \
+ 	       --openapi_out=fq_schema_naming=true,default_response=false:./doc \
+	       api/${serviceName}/v1/${arg}.proto
   exit
+#  kratos proto client api/${serviceName}/v1/${arg}.proto
+#  exit
 }
 
 apiserver(){
@@ -132,9 +140,9 @@ case ${cmd} in
   (api)
     api
     ;;
-  (doc)
-    doc
-    ;;
+#  (doc)
+#    doc
+#    ;;
   (buildlocal)
     buildlocal
     ;;

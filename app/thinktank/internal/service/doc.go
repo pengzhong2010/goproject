@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	pb "goproject/api/thinktank/v1"
 )
@@ -15,6 +16,8 @@ func NewDocService() *DocService {
 }
 
 func (s *DocService) CreateDoc(ctx context.Context, req *pb.CreateDocRequest) (*pb.UpdateResp, error) {
+	fmt.Println("123ok")
+	fmt.Printf("%+v", req)
 	return &pb.UpdateResp{}, nil
 }
 func (s *DocService) UpdateDoc(ctx context.Context, req *pb.UpdateDocRequest) (*pb.UpdateResp, error) {
