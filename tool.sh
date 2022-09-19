@@ -115,6 +115,7 @@ apiclient(){
          --proto_path=./api \
 	       --proto_path=./third_party \
  	       --go_out=paths=source_relative:. \
+ 	       --validate_out="lang=go:../" \
  	       --go-http_out=paths=source_relative:. \
  	       --go-grpc_out=paths=source_relative:. \
  	       --openapi_out=fq_schema_naming=true,default_response=false:./doc \

@@ -1,12 +1,13 @@
 syntax = "proto3";
 
-import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+//import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 import "google/protobuf/empty.proto";
 import "google/api/annotations.proto";
+import "validate/validate.proto";
 
 package api.thinktank.v1;
 option go_package = "goproject/api/thinktank/v1;v1";
-option (gogoproto.goproto_getters_all) = false;
+//option (gogoproto.goproto_getters_all) = false;
 
 import "api/thinktank/v1/common.proto";
 
@@ -43,7 +44,7 @@ service Todo {
 
 message CreateTodoRequest {
   // title
-  string title   = 1;
+  string title   = 1[(validate.rules).string.min_len    = 1];
   // detail
   string detail  = 2;
 }

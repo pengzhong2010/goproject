@@ -17,15 +17,20 @@ func NewTodoService(uc *biz.TodoUsecase) *TodoService {
 	return &TodoService{uc: uc}
 }
 
-func (s *TodoService) CreateTodo(ctx context.Context, req *pb.CreateTodoRequest) (*pb.UpdateResp, error) {
-	_, err := s.uc.CreateTodo(ctx, &biz.Todo{
+func (s *TodoService) CreateTodo(ctx context.Context, req *pb.CreateTodoRequest) (resp *pb.UpdateResp, err error) {
+	err = req.Validate()
+	if err != nil {
+		return
+	}
+	_, err = s.uc.CreateTodo(ctx, &biz.Todo{
 		Title:  req.Title,
 		Detail: req.Detail,
 	})
 	if err != nil {
-		return nil, err
+		return
 	}
-	return &pb.UpdateResp{}, nil
+	resp = &pb.UpdateResp{}
+	return
 }
 func (s *TodoService) UpdateTodo(ctx context.Context, req *pb.UpdateTodoRequest) (*pb.UpdateResp, error) {
 	return &pb.UpdateResp{}, nil
