@@ -40,8 +40,8 @@ func NewMysql(cfg *conf.Data_Mysql) (db *gorm.DB, cf func(), err error) {
 		return
 	}
 	sqlDB, err := db.DB()
-	sqlDB.SetConnMaxIdleTime(cfg.IdleTimeout.AsDuration())
-	sqlDB.SetConnMaxLifetime(cfg.ExecTimeout.AsDuration())
+	//sqlDB.SetConnMaxIdleTime(cfg.IdleTimeout.AsDuration())
+	//sqlDB.SetConnMaxLifetime(cfg.ExecTimeout.AsDuration())
 	sqlDB.SetMaxIdleConns(int(cfg.Idle))
 	sqlDB.SetMaxOpenConns(int(cfg.Active))
 	//db.Logger = logger.Default.LogMode(logger.Info)
