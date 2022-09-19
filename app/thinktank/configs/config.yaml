@@ -7,7 +7,7 @@ server:
     timeout: 1s
 data:
   mysql:
-    dsn: root:caidaoninb@tcp(127.0.0.1:33306)/todo?charset=utf8mb4&parseTime=True&loc=Local
+    dsn: user:passwd@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local
     active: 20
     idle: 10
 #    idleTimeout: 4h
