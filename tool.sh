@@ -78,18 +78,6 @@ api(){
   exit
 }
 
-#doc(){
-#  mkdir -p ./doc
-#  protoc --proto_path=./api \
-#	       --proto_path=./third_party \
-# 	       --go_out=paths=source_relative:./api \
-# 	       --go-http_out=paths=source_relative:./api \
-# 	       --go-grpc_out=paths=source_relative:./api \
-#	       --openapi_out=fq_schema_naming=true,default_response=false:./doc \
-#	       ${API_PROTO_FILES}
-#  exit
-#}
-
 buildlocal(){
   mkdir -p ./bin && go build -ldflags "-X main.Version=${VERSION}" -o ./bin/${serviceName} ./app/${serviceName}/cmd/${serviceName}/main.go ./app/${serviceName}/cmd/${serviceName}/wire_gen.go
   exit
@@ -129,8 +117,6 @@ apiclient(){
  	       --openapi_out=fq_schema_naming=true,default_response=false:./doc \
 	       api/${serviceName}/v1/${arg}.proto
   exit
-#  kratos proto client api/${serviceName}/v1/${arg}.proto
-#  exit
 }
 
 apiserver(){

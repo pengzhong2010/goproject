@@ -31,14 +31,18 @@ sh tool.sh {myapp} apiserver {myapi}
 ## edit service file
 edit file ./app/{myapp}/internal/service/{myapi}.go
 ## edit server file
-http : 
+### http : 
 file path : ./app/{myapp}/internal/server/http.go
+
 register your server hear
 ```shell
 v1.Register{myapp}HTTPServer(srv, {myapi})
 # v1.RegisterGreeterHTTPServer(srv, greeter)
 ```
-grpc
+### grpc :
+file path : ./app/{myapp}/internal/server/grpc.go
+
+register your server hear
 ```shell
 v1.Register{myapp}Server(srv, {myapi})
 #v1.RegisterGreeterServer(srv, greeter)
@@ -48,7 +52,7 @@ v1.Register{myapp}Server(srv, {myapi})
 file list : ./app/{myapp}/cmd/{myapp}/wire.go
 ### generate wire
 ```shell
-sh tool.sh thinktank generate
+sh tool.sh {myapp} generate
 ```
 ## edit bussiness file 
 path : ./app/{myapp}/internal/biz
@@ -57,7 +61,7 @@ path : ./app/{myapp}/internal/biz
 path : ./app/{myapp}/internal/data
 ## start server
 ```shell
-sh tool.sh thinktank start
+sh tool.sh {myapp} start
 ```
 # base layout doc
 - https://go-kratos.dev/docs/
