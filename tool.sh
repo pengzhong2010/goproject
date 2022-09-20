@@ -10,11 +10,13 @@ needhelp(){
   echo 'Detail:'
   echo ' Command                Des                                eg.
  init                   init env                           sh tool.sh thinktank init
+ new                    new app                            sh tool.sh thinktank new
  config                 generate internal proto            sh tool.sh thinktank config
  api                    generate all api proto             sh tool.sh thinktank api
  add                    add api demo proto                 sh tool.sh thinktank add demoxxx
  apiclient              generate one api proto             sh tool.sh thinktank apiclient demoxxx
  apiserver              generate one service file          sh tool.sh thinktank apiserver demoxxx
+ apierror               generate error service file        sh tool.sh thinktank apierror demoxxx
  buildlocal             build for local system             sh tool.sh thinktank buildlocal
  buildlinux             build for linux                    sh tool.sh thinktank buildlinux
  generate               generate                           sh tool.sh thinktank generate
@@ -37,8 +39,10 @@ serviceName=$1
 cmd=$2
 arg=$3
 
-INTERNAL_PROTO_FILES=`find ./app/${serviceName}/internal -name "*.proto"`
-API_PROTO_FILES=`find ./api -name "*.proto"`
+if [[ "$cmd" != "init" ]] && [[ "$cmd" != "new" ]];then
+  INTERNAL_PROTO_FILES=`find ./app/${serviceName}/internal -name "*.proto"`
+  API_PROTO_FILES=`find ./api -name "*.proto"`
+fi
 
 init(){
   go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
@@ -48,6 +52,10 @@ init(){
 	go install github.com/google/gnostic/cmd/protoc-gen-openapi@latest
 	go install github.com/google/wire/cmd/wire@latest
 	go mod download
+}
+
+new(){
+  kratos new app/${serviceName} --nomod -r https://gitee.com/go-kratos/kratos-layout.git
 }
 
 config(){
@@ -143,6 +151,9 @@ apierror(){
 case ${cmd} in
   (init)
     init
+    ;;
+  (new)
+    new
     ;;
   (config)
     config
