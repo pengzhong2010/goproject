@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"fmt"
 
 	"goproject/app/thinktank/internal/biz"
 
@@ -44,6 +45,14 @@ func (r *todoRepo) Save(ctx context.Context, in *biz.Todo) (out *biz.Todo, err e
 		err = errors.Wrap(err, "commit err")
 		return
 	}
+	// redis
+	err = r.data.Redis.Set("abc", "def", 3600)
+	if err != nil {
+		err = errors.Wrap(err, "redis err")
+		return
+	}
+	dataRedis, err := r.data.Redis.Get("abc")
+	fmt.Println(dataRedis)
 	return
 }
 

@@ -7,14 +7,22 @@ server:
     timeout: 1s
 data:
   mysql:
-    dsn: user:passwd@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local
+    dsn: user:passwd@tcp(127.0.0.1:3306)/todo?charset=utf8mb4&parseTime=True&loc=Local
     active: 20
     idle: 10
-#    idleTimeout: 4h
+    idle_timeout: 14400s
 #    queryTimeout: 20000ms
-#    execTimeout: 20000ms
+    exec_timeout: 3600s
 #    tranTimeout: 20000ms
   redis:
+    network: tcp
     addr: 127.0.0.1:6379
-    read_timeout: 0.2s
-    write_timeout: 0.2s
+    password: xxx
+    db_num: 0
+    active: 10
+    idle: 10
+    dial_timeout: 2s
+    max_conn_lifetime: 3600s
+    read_timeout: 5s
+    write_timeout: 3s
+    idle_timeout: 10s

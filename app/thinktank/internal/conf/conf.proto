@@ -30,16 +30,23 @@ message Data {
     string dsn = 1;
     int64 active = 2;
     int64 idle = 3;
-    google.protobuf.Duration idleTimeout = 4;
-    google.protobuf.Duration queryTimeout = 5;
-    google.protobuf.Duration execTimeout = 6;
-    google.protobuf.Duration tranTimeout = 7;
+    google.protobuf.Duration idle_timeout = 4;
+//    google.protobuf.Duration queryTimeout = 5;
+    google.protobuf.Duration exec_timeout = 5;
+//    google.protobuf.Duration tranTimeout = 7;
   }
   message Redis {
     string network = 1;
     string addr = 2;
-    google.protobuf.Duration read_timeout = 3;
-    google.protobuf.Duration write_timeout = 4;
+    string password = 3;
+    int64 db_num = 4;
+    int64 active = 5;
+    int64 idle = 6;
+    google.protobuf.Duration dial_timeout = 7;
+    google.protobuf.Duration max_conn_lifetime = 8;
+    google.protobuf.Duration read_timeout = 9;
+    google.protobuf.Duration write_timeout = 10;
+    google.protobuf.Duration idle_timeout = 11;
   }
   Mysql mysql = 1;
   Redis redis = 2;
