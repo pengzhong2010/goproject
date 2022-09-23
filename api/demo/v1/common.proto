@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+import "validate/validate.proto";
+
+package api.demo.v1;
+option go_package = "goproject/api/demo/v1;v1";
+
+message IDReq {
+  // id
+  int64 id = 1 [(validate.rules).int64.gt = 0];
+}
+
+message IDReqs {
+  // ids
+  repeated int64 ids = 1 [(validate.rules).int64.gt = 0];
+}
+
+message BaseReq {
+  // 模糊搜索
+  string key       = 1;
+  // 分页
+  int32  page_size = 2;
+  // 分页
+  int32  page_num  = 3;
+  // id
+  int64  id        = 4;
+}
+
+message KeyReq {
+  string key = 1;
+}
+
+message UpdateResp {
+  // 返回信息
+  string message = 1;
+}
+
+message IDResp {
+  int64 id = 1;
+}
+
+message MapResp {
+  map<string, string> data = 1;
+}
+
+message ListReq {
+  // id
+  int64 id            = 1;
+  // 模糊搜索
+  string key          = 2;
+  // 分页
+  int64  page_size    = 3;
+  // 分页
+  int64  page_num     = 4;
+  // 开始时间
+  int64  stime        = 5;
+  // 结束时间
+  int64  etime        = 6;
+  // 排序字段
+  string orderby      = 7;
+  // 排序字段
+  string asc          = 8;
+  // 我的
+  int64 mine          = 9;
+}
+
+enum Mine {
+  MINE_DEFAULT = 0;
+  MINE_MINE = 1;
+}

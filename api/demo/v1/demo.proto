@@ -1,0 +1,119 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+import "validate/validate.proto";
+
+package api.demo.v1;
+option go_package = "goproject/api/demo/v1;v1";
+
+import "api/demo/v1/common.proto";
+
+service Todo {
+  rpc CreateTodo (CreateTodoRequest) returns (UpdateResp) {
+    option (google.api.http) = {
+      post: "/todo/create",
+      body: "*",
+    };
+  }
+  rpc UpdateTodo (UpdateTodoRequest) returns (UpdateResp) {
+    option (google.api.http) = {
+      put: "/todo/update",
+      body: "*",
+    };
+  };
+  rpc DeleteTodo (IDReq) returns (UpdateResp) {
+    option (google.api.http) = {
+      delete: "/todo/delete"
+    };
+  };
+  rpc GetTodo (IDReq) returns (GetTodoReply) {
+    option (google.api.http) = {
+      get: "/todo/get"
+    };
+  };
+  rpc ListTodo (ListTodoRequest) returns (ListTodoReply) {
+    option (google.api.http) = {
+      get: "/todo/list"
+    };
+  };
+  rpc Login (LoginRequest) returns (LoginReply) {
+    option (google.api.http) = {
+      post: "/sso/login"
+      body: "*"
+    };
+  }
+}
+
+message CreateTodoRequest {
+  // title
+  string title   = 1 [(validate.rules).string.min_len = 1];
+  // detail
+  string detail  = 2;
+}
+
+message UpdateTodoRequest {
+  // id
+  int64  id     = 1;
+  // title
+  string title  = 2;
+  // detail
+  string detail = 3;
+}
+
+message GetTodoReply {
+  // id
+  int64  id     = 1;
+  // uuid
+  string uuid   = 2;
+  // 标题
+  string title  = 3;
+  // detail
+  string detail = 4;
+  // 创建时间
+  int64  ctime  = 5;
+  // 修改时间
+  int64  mtime  = 6;
+}
+
+message ListTodoRequest {
+  // id
+  int64 id          = 1;
+  // 模糊搜索
+  string key        = 2;
+  // title
+  string title      = 3;
+  // 分页
+  int64  page_size  = 4;
+  // 分页
+  int64  page_num   = 5;
+  // 排序字段
+  string orderby    = 6;
+  // 排序顺序
+  string asc        = 7;
+  // 我的 0.全部 1.我的
+  Mine mine         = 8;
+}
+message ListTodoReply {
+  repeated TodoForList data  = 1;
+  int64    count             = 2;
+}
+message TodoForList {
+  // id
+  int64  id     = 1;
+  // uuid
+  string uuid   = 2;
+  // 标题
+  string title  = 3;
+  // 创建时间
+  int64  ctime  = 4;
+  // 修改时间
+  int64  mtime  = 5;
+}
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginReply {
+  string token = 1;
+}

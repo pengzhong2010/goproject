@@ -8,21 +8,21 @@ needhelp(){
   echo ' sh tool.sh [serviceName] [command] [args]'
   echo ''
   echo 'Detail:'
-  echo ' Command                Des                                eg.
- init                   init env                           sh tool.sh thinktank init
- new                    new app                            sh tool.sh thinktank new
- config                 generate internal proto            sh tool.sh thinktank config
- api                    generate all api proto             sh tool.sh thinktank api
- add                    add api demo proto                 sh tool.sh thinktank add demoxxx
- apiclient              generate one api proto             sh tool.sh thinktank apiclient demoxxx
- apiserver              generate one service file          sh tool.sh thinktank apiserver demoxxx
- apierror               generate error service file        sh tool.sh thinktank apierror demoxxx
- buildlocal             build for local system             sh tool.sh thinktank buildlocal
- buildlinux             build for linux                    sh tool.sh thinktank buildlinux
- generate               generate                           sh tool.sh thinktank generate
- all                    generate all                       sh tool.sh thinktank all
- start                  start service                      sh tool.sh thinktank start
- help                   show help                          sh tool.sh thinktank help
+  echo ' Command                Des                                      eg.
+ init                   init env                                 sh tool.sh thinktank init
+ new                    new app                                  sh tool.sh thinktank new
+ config                 generate internal proto                  sh tool.sh thinktank config
+ api                    generate all api proto                   sh tool.sh thinktank api
+ add                    add api demo proto                       sh tool.sh thinktank add demoxxx
+ apiclient              generate one api proto                   sh tool.sh thinktank apiclient demoxxx
+ apiserver              generate one service file                sh tool.sh thinktank apiserver demoxxx
+ apierror               generate error service file              sh tool.sh thinktank apierror demoxxx
+ buildlocal             build for local system                   sh tool.sh thinktank buildlocal
+ buildlinux             build for linux                          sh tool.sh thinktank buildlinux
+ generate               generate                                 sh tool.sh thinktank generate
+ all                    generate all                             sh tool.sh thinktank all
+ start                  start service                            sh tool.sh thinktank start
+ help                   show help                                sh tool.sh thinktank help
   '
 }
 
@@ -117,6 +117,8 @@ apiclient(){
  	       --openapi_out=fq_schema_naming=true,default_response=false:./doc \
 	       api/${serviceName}/v1/${arg}.proto
   exit
+#  kratos proto client api/${serviceName}/v1/${arg}.proto
+#  exit
 }
 
 apiserver(){
@@ -147,9 +149,6 @@ case ${cmd} in
   (api)
     api
     ;;
-#  (doc)
-#    doc
-#    ;;
   (buildlocal)
     buildlocal
     ;;
@@ -193,6 +192,7 @@ case ${cmd} in
   (all)
     init
     api
+    config
     generate
     ;;
   (*)

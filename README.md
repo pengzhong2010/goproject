@@ -26,6 +26,21 @@ edit file ./api/{myapp}/v1/{myapi}.proto
 ```shell
 sh tool.sh {myapp} apiclient {myapi}
 ```
+## make proto error file
+```shell
+sh tool.sh {myapp} apierror {myapierror}
+```
+## edit config file
+### edit config file 
+
+path: ./app/{myapp}/configs/{myapp.yaml}
+### edit config proto 
+
+path: ./app/{myapp}/internal/conf/conf.proto
+### generate proto to go file
+```shell
+sh tool.sh {myapp} config
+```
 ## add new file service
 sh tool.sh {myapp} apiserver {myapi}
 ## edit service file
@@ -34,15 +49,15 @@ edit file ./app/{myapp}/internal/service/{myapi}.go
 ### http : 
 file path : ./app/{myapp}/internal/server/http.go
 
-register your server hear
+route your server hear
 ```shell
 v1.Register{myapp}HTTPServer(srv, {myapi})
 # v1.RegisterGreeterHTTPServer(srv, greeter)
 ```
-### grpc :
+### grpc
 file path : ./app/{myapp}/internal/server/grpc.go
 
-register your server hear
+route your server hear
 ```shell
 v1.Register{myapp}Server(srv, {myapi})
 #v1.RegisterGreeterServer(srv, greeter)
@@ -61,8 +76,15 @@ path : ./app/{myapp}/internal/biz
 path : ./app/{myapp}/internal/data
 ## start server
 ```shell
-sh tool.sh {myapp} start
+ENV=local sh tool.sh {myapp} start
+#ENV=dev sh tool.sh {myapp} start
 ```
+# mysql demo
+path: app/thinktank/internal/data/todo.go: Save()
+# grpc request demo
+path: app/thinktank/internal/biz/todo.go: Update()
+# swagger ui 
+path: http://{host}:{port}/q/swagger-ui
 # base layout doc
 - https://go-kratos.dev/docs/
 - https://developers.google.com/protocol-buffers/docs/overview

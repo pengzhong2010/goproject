@@ -34,3 +34,9 @@ bin/
 .vscode/
 .idea/
 *.swp
+
+cache
+*.yaml
+*.pb.go
+*.pb.validate.go
+*_gen.go
