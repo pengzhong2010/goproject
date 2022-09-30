@@ -3,32 +3,40 @@
 go语言大仓开发模式仓库
 
 # Quickstart
+command need `shell` environment
+
+if `windows` recommend `git-bash` for cmdline tool
 ## help
 ```shell
-sh tool.sh help
+./ase help
 ```
+## new app add run
+```shell
+./ase all {mypp}
+./ase start {myapp}
+```
+# Useful command
 ## init env 
 ```shell
-sh tool.sh xxx init
+./ase init
 ```
-xxx don't care , maybe any string
 ## new app server
 ```shell
-sh tool.sh {myapp} new
+./ase new {myapp}
 ```
 ## add new file api 
 ```shell
-sh tool.sh {myapp} add {myapi}
+./ase add {myapp} {myapi}
 ```
 ## edit api
 edit file ./api/{myapp}/v1/{myapi}.proto
 ## make proto file 
 ```shell
-sh tool.sh {myapp} apiclient {myapi}
+./ase apiclient {myapp} {myapi}
 ```
 ## make proto error file
 ```shell
-sh tool.sh {myapp} apierror {myapierror}
+./ase apierror
 ```
 ## edit config file
 ### edit config file 
@@ -39,10 +47,10 @@ path: ./app/{myapp}/configs/{myapp.yaml}
 path: ./app/{myapp}/internal/conf/conf.proto
 ### generate proto to go file
 ```shell
-sh tool.sh {myapp} config
+./ase config {myapp}
 ```
 ## add new file service
-sh tool.sh {myapp} apiserver {myapi}
+./ase apiserver {myapp} {myapi}
 ## edit service file
 edit file ./app/{myapp}/internal/service/{myapi}.go
 ## edit server file
@@ -67,7 +75,7 @@ v1.Register{myapp}Server(srv, {myapi})
 file list : ./app/{myapp}/cmd/{myapp}/wire.go
 ### generate wire
 ```shell
-sh tool.sh {myapp} generate
+./ase generate {myapp}
 ```
 ## edit bussiness file 
 path : ./app/{myapp}/internal/biz
@@ -76,8 +84,10 @@ path : ./app/{myapp}/internal/biz
 path : ./app/{myapp}/internal/data
 ## start server
 ```shell
-ENV=local sh tool.sh {myapp} start
-#ENV=dev sh tool.sh {myapp} start
+# env local
+ENV=local ./ase start {myapp}
+# env dev
+ENV=dev ./ase start {myapp}
 ```
 # mysql demo
 path: app/thinktank/internal/data/todo.go: Save()

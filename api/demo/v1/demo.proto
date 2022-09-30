@@ -6,27 +6,27 @@ import "validate/validate.proto";
 package api.demo.v1;
 option go_package = "goproject/api/demo/v1;v1";
 
-import "api/demo/v1/common.proto";
+import "api/common/common.proto";
 
 service Todo {
-  rpc CreateTodo (CreateTodoRequest) returns (UpdateResp) {
+  rpc CreateTodo (CreateTodoRequest) returns (common.UpdateResp) {
     option (google.api.http) = {
       post: "/todo/create",
       body: "*",
     };
   }
-  rpc UpdateTodo (UpdateTodoRequest) returns (UpdateResp) {
+  rpc UpdateTodo (UpdateTodoRequest) returns (common.UpdateResp) {
     option (google.api.http) = {
       put: "/todo/update",
       body: "*",
     };
   };
-  rpc DeleteTodo (IDReq) returns (UpdateResp) {
+  rpc DeleteTodo (common.IDReq) returns (common.UpdateResp) {
     option (google.api.http) = {
       delete: "/todo/delete"
     };
   };
-  rpc GetTodo (IDReq) returns (GetTodoReply) {
+  rpc GetTodo (common.IDReq) returns (GetTodoReply) {
     option (google.api.http) = {
       get: "/todo/get"
     };
@@ -91,7 +91,7 @@ message ListTodoRequest {
   // 排序顺序
   string asc        = 7;
   // 我的 0.全部 1.我的
-  Mine mine         = 8;
+  common.Mine mine         = 8;
 }
 message ListTodoReply {
   repeated TodoForList data  = 1;

@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 
-	demo "goproject/api/demo/v1"
+	pb "goproject/api/demo/v1"
 	"goproject/app/demo/internal/conf"
 	"goproject/app/demo/internal/service"
 
@@ -50,6 +50,7 @@ func NewHTTPServer(c *conf.Server, ac *conf.Auth, todo *service.TodoService, log
 				metrics.WithRequests(prom.NewCounter(_metricRequests)),
 			),
 			selector.Server(
+				// jwt
 				jwt.Server(
 					func(token *jwt2.Token) (interface{}, error) {
 						return []byte(ac.Jwt.ApiSecretKey), nil
@@ -59,7 +60,10 @@ func NewHTTPServer(c *conf.Server, ac *conf.Auth, todo *service.TodoService, log
 						return &jwt2.MapClaims{}
 					}),
 				),
-			).Match(NewWhiteListMatcher()).Build(),
+			).Match(
+				// filter
+				NewWhiteListMatcher(),
+			).Build(),
 		),
 		http.Filter(handlers.CORS(
 			handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
@@ -77,9 +81,12 @@ func NewHTTPServer(c *conf.Server, ac *conf.Auth, todo *service.TodoService, log
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
 	srv := http.NewServer(opts...)
+	// swagger-ui
 	openAPIhandler := openapiv2.NewHandler()
 	srv.HandlePrefix("/q/", openAPIhandler)
+	// metric
 	srv.Handle("/metrics", promhttp.Handler())
-	demo.RegisterTodoHTTPServer(srv, todo)
+	// api
+	pb.RegisterTodoHTTPServer(srv, todo)
 	return srv
 }

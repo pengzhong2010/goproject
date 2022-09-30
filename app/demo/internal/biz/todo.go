@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 
+	commonpb "goproject/api/common"
 	pb "goproject/api/demo/v1"
+	errorpb "goproject/api/error"
 	v1 "goproject/api/helloworld/v1"
 	"goproject/app/demo/internal/conf"
 
@@ -34,11 +36,11 @@ type TodoUsecase struct {
 
 // NewTodoUsecase new a Greeter usecase.
 func NewTodoUsecase(ac *conf.Auth, repo TodoRepo, tc v1.GreeterClient, logger log.Logger) *TodoUsecase {
-	return &TodoUsecase{ac: ac, repo: repo, tc: tc, log: log.NewHelper(logger)}
+	return &TodoUsecase{ac: ac, repo: repo, tc: tc, log: log.NewHelper(log.With(logger, "module", "biz/todo"))}
 }
 
 // CreateTodo creates a Todo, and returns the new Todo.
-func (uc *TodoUsecase) CreateTodo(ctx context.Context, in *pb.CreateTodoRequest) (out *pb.UpdateResp, err error) {
+func (uc *TodoUsecase) CreateTodo(ctx context.Context, in *pb.CreateTodoRequest) (out *commonpb.UpdateResp, err error) {
 	err = uc.repo.Save(ctx, &Todo{
 		Title:  in.Title,
 		Detail: in.Detail,
@@ -47,10 +49,10 @@ func (uc *TodoUsecase) CreateTodo(ctx context.Context, in *pb.CreateTodoRequest)
 		err = errors.Wrap(err, "xxx")
 		return
 	}
-	out = &pb.UpdateResp{}
+	out = &commonpb.UpdateResp{}
 	return
 }
-func (uc *TodoUsecase) UpdateTodo(ctx context.Context, in *pb.UpdateTodoRequest) (out *pb.UpdateResp, err error) {
+func (uc *TodoUsecase) UpdateTodo(ctx context.Context, in *pb.UpdateTodoRequest) (out *commonpb.UpdateResp, err error) {
 	resp, err := uc.tc.SayHello(ctx, &v1.HelloRequest{
 		Name: "aax",
 	})
@@ -69,7 +71,7 @@ func (uc *TodoUsecase) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Log
 	signedString, err := claims.SignedString([]byte(uc.ac.Jwt.ApiSecretKey))
 	if err != nil {
 		err = errors.Wrap(err, "generate token failed")
-		return nil, pb.ErrorAuthrizationFaild("generate token failed: %s", err.Error())
+		return nil, errorpb.ErrorAuthrizationFaild("generate token failed: %s", err.Error())
 	}
 	return &pb.LoginReply{
 		Token: fmt.Sprintf("Bearer %s", signedString),

@@ -1,7 +1,7 @@
 package server
 
 import (
-	demo "goproject/api/demo/v1"
+	pb "goproject/api/demo/v1"
 	"goproject/app/demo/internal/conf"
 	"goproject/app/demo/internal/service"
 
@@ -40,6 +40,6 @@ func NewGRPCServer(c *conf.Server, ac *conf.Auth, todo *service.TodoService, log
 		opts = append(opts, grpc.Timeout(c.Grpc.Timeout.AsDuration()))
 	}
 	srv := grpc.NewServer(opts...)
-	demo.RegisterTodoServer(srv, todo)
+	pb.RegisterTodoServer(srv, todo)
 	return srv
 }

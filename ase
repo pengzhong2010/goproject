@@ -5,28 +5,29 @@ set -e
 needhelp(){
   echo ''
   echo 'Usage:'
-  echo ' sh tool.sh [serviceName] [command] [args]'
+  echo ' sh tool.sh [command] [serviceName]  [args]'
   echo ''
   echo 'Detail:'
   echo ' Command                Des                                      eg.
- init                   init env                                 sh tool.sh thinktank init
- new                    new app                                  sh tool.sh thinktank new
- config                 generate internal proto                  sh tool.sh thinktank config
- api                    generate all api proto                   sh tool.sh thinktank api
- add                    add api demo proto                       sh tool.sh thinktank add demoxxx
- apiclient              generate one api proto                   sh tool.sh thinktank apiclient demoxxx
- apiserver              generate one service file                sh tool.sh thinktank apiserver demoxxx
- apierror               generate error service file              sh tool.sh thinktank apierror demoxxx
- buildlocal             build for local system                   sh tool.sh thinktank buildlocal
- buildlinux             build for linux                          sh tool.sh thinktank buildlinux
- generate               generate                                 sh tool.sh thinktank generate
- all                    generate all                             sh tool.sh thinktank all
- start                  start service                            sh tool.sh thinktank start
- help                   show help                                sh tool.sh thinktank help
+ init                   init env                                 ./ase init
+ new                    new app                                  ./ase new {myapp}
+ config                 generate internal proto                  ./ase config {myapp}
+ api                    generate all api proto                   ./ase api {myapp}
+ add                    add api demo proto                       ./ase add {myapp} {myapi}
+ apiclient              generate one api proto file              ./ase apiclient {myapp} {myapi}
+ apiserver              generate one service file                ./ase apiserver {myapp} {myapi}
+ apicommon              generate api common file                 ./ase apicommon
+ apierror               generate api error file                  ./ase apierror
+ buildlocal             build for local system                   ./ase buildlocal {myapp}
+ buildlinux             build for linux                          ./ase buildlinux {myapp}
+ generate               generate                                 ./ase generate {myapp}
+ all                    generate all                             ./ase all {myapp}
+ start                  start service                            ./ase start {myapp}
+ help                   show help                                ./ase help
   '
 }
 
-if [ $# -lt 2 ]; then
+if [ $# -lt 1 ]; then
   needhelp
   exit
 fi
@@ -35,14 +36,9 @@ GOHOSTOS=`go env GOHOSTOS`
 GOPATH=`go env GOPATH`
 VERSION=`git describe --tags --always`
 
-serviceName=$1
-cmd=$2
+cmd=$1
+serviceName=$2
 arg=$3
-
-if [[ "$cmd" != "init" ]] && [[ "$cmd" != "new" ]];then
-  INTERNAL_PROTO_FILES=`find ./app/${serviceName}/internal -name "*.proto"`
-  API_PROTO_FILES=`find ./api -name "*.proto"`
-fi
 
 init(){
   go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
@@ -59,6 +55,7 @@ new(){
 }
 
 config(){
+  INTERNAL_PROTO_FILES=`find ./app/${serviceName}/internal -name "*.proto"`
   protoc --proto_path=./app/${serviceName}/internal \
 	       --proto_path=./third_party \
  	       --go_out=paths=source_relative:./app/${serviceName}/internal \
@@ -67,6 +64,7 @@ config(){
 }
 
 api(){
+  API_PROTO_FILES=`find ./api/${serviceName} -name "*.proto"`
   protoc --proto_path=. \
          --proto_path=./api \
 	       --proto_path=./third_party \
@@ -91,7 +89,7 @@ buildlinux(){
 generate(){
   go mod tidy
 	go get github.com/google/wire/cmd/wire@latest
-	go generate ./...
+	go generate ./app/${serviceName}/...
 	exit
 }
 
@@ -117,12 +115,19 @@ apiclient(){
  	       --openapi_out=fq_schema_naming=true,default_response=false:./doc \
 	       api/${serviceName}/v1/${arg}.proto
   exit
-#  kratos proto client api/${serviceName}/v1/${arg}.proto
-#  exit
 }
 
 apiserver(){
   kratos proto server api/${serviceName}/v1/${arg}.proto -t app/${serviceName}/internal/service
+  exit
+}
+
+apicommon(){
+  protoc --proto_path=. \
+         --proto_path=./api \
+	       --proto_path=./third_party \
+ 	       --go_out=paths=source_relative:. \
+         api/common/common.proto
   exit
 }
 
@@ -131,7 +136,7 @@ apierror(){
          --proto_path=./third_party \
          --go_out=paths=source_relative:. \
          --go-errors_out=paths=source_relative:. \
-         api/${serviceName}/v1/${arg}.proto
+         api/error/error.proto
   exit
 }
 
@@ -141,24 +146,52 @@ case ${cmd} in
     init
     ;;
   (new)
+    if [ $# -ne 2 ]; then
+      echo "args {2} not found"
+      exit
+    fi
     new
     ;;
   (config)
+    if [ $# -ne 2 ]; then
+      echo "args {2} not found"
+      exit
+    fi
     config
     ;;
   (api)
+    if [ $# -ne 2 ]; then
+      echo "args {2} not found"
+      exit
+    fi
     api
     ;;
   (buildlocal)
+    if [ $# -ne 2 ]; then
+      echo "args {2} not found"
+      exit
+    fi
     buildlocal
     ;;
   (buildlinux)
+    if [ $# -ne 2 ]; then
+      echo "args {2} not found"
+      exit
+    fi
     buildlinux
     ;;
   (generate)
+    if [ $# -ne 2 ]; then
+      echo "args {2} not found"
+      exit
+    fi
     generate
     ;;
   (start)
+    if [ $# -ne 2 ]; then
+      echo "args {2} not found"
+      exit
+    fi
     start
     ;;
   (add)
@@ -182,14 +215,17 @@ case ${cmd} in
     fi
     apiserver
     ;;
+  (apicommon)
+    apicommon
+    ;;
   (apierror)
-    if [ $# -ne 3 ]; then
-      echo "args {3} not found"
-      exit
-    fi
     apierror
     ;;
   (all)
+    if [ $# -ne 2 ]; then
+      echo "args {2} not found"
+      exit
+    fi
     init
     api
     config

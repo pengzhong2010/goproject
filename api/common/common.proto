@@ -2,8 +2,8 @@ syntax = "proto3";
 
 import "validate/validate.proto";
 
-package api.demo.v1;
-option go_package = "goproject/api/demo/v1;v1";
+package api.common;
+option go_package = "goproject/api/common;common";
 
 message IDReq {
   // id

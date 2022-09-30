@@ -37,6 +37,4 @@ bin/
 
 cache
 *.yaml
-*.pb.go
-*.pb.validate.go
-*_gen.go
+*.comment.sh

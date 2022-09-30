@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package api.demo.v1;
-option go_package = "goproject/api/demo/v1;v1";
+package api.error;
+option go_package = "goproject/api/error;error";
 
 import "errors/errors.proto";
 
@@ -13,4 +13,5 @@ enum ErrorReason {
   CONTENT_MISSING = 1 [(errors.code) = 400];
   BAD_PARAMS      = 2 [(errors.code) = 406];
   AUTHRIZATION_FAILD = 3 [(errors.code) = 401];
+  FORBIDDEN = 4 [(errors.code) = 403];
 }

@@ -1,12 +1,6 @@
 package server
 
-import (
-	"github.com/google/wire"
-	"github.com/prometheus/client_golang/prometheus"
-)
-
-// ProviderSet is server providers.
-var ProviderSet = wire.NewSet(NewGRPCServer, NewHTTPServer)
+import "github.com/prometheus/client_golang/prometheus"
 
 var (
 	// Name is the name of the compiled software.
