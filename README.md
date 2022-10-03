@@ -87,7 +87,7 @@ path : ./app/{myapp}/internal/data
 # env local
 ENV=local ./ase start {myapp}
 # env dev
-ENV=dev ./ase start {myapp}
+ENV=dev NACOS_ADDR=10.0.0.1 NACOS_PORT=8848 NACOS_NAMESPACE_ID=xxx NACOS_GROUP=SRE NACOS_DATA_IDS="demo.yaml;registry.yaml;auth.yaml" ./ase start tree
 ```
 # mysql demo
 path: app/thinktank/internal/data/todo.go: Save()
