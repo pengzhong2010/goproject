@@ -1,6 +1,7 @@
 package util
 
 import (
+	"encoding/json"
 	"reflect"
 )
 
@@ -24,4 +25,15 @@ func GetIndex(xs interface{}, x interface{}) int64 {
 		}
 	}
 	return -1
+}
+func StructTypeTrans(in interface{}, out interface{}) (err error) {
+	b, err := json.Marshal(in)
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(b, out)
+	if err != nil {
+		return
+	}
+	return
 }

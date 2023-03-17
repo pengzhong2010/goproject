@@ -5,6 +5,7 @@ import (
 	"context"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 )
 
 type HttpClientPostIn struct {
@@ -43,4 +44,11 @@ func HttpClientPost(c context.Context, in *HttpClientPostIn) (out *HttpClientPos
 		Content:    content,
 	}
 	return
+}
+func UrlEncode(in string) (out string) {
+	return url.QueryEscape(in)
+}
+
+func UrlDecode(in string) (out string, err error) {
+	return url.QueryUnescape(in)
 }

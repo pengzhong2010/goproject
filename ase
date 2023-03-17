@@ -20,6 +20,7 @@ needhelp(){
  apierror               generate api error file                  ./ase apierror
  buildlocal             build for local system                   ./ase buildlocal {myapp}
  buildlinux             build for linux                          ./ase buildlinux {myapp}
+ deploydev              deploy for dev                           ./ase deploydev {myapp}
  generate               generate                                 ./ase generate {myapp}
  all                    generate all                             ./ase all {myapp}
  start                  start service                            ./ase start {myapp}
@@ -41,13 +42,15 @@ serviceName=$2
 arg=$3
 
 init(){
-  go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-	go install github.com/go-kratos/kratos/cmd/kratos/v2@latest
-	go install github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2@latest
-	go install github.com/google/gnostic/cmd/protoc-gen-openapi@latest
-	go install github.com/google/wire/cmd/wire@latest
-	go mod download
+  go mod download
+  go install google.golang.org/protobuf/cmd/protoc-gen-go
+	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
+	go install github.com/go-kratos/kratos/cmd/kratos/v2
+	go install github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2
+	go install github.com/google/gnostic/cmd/protoc-gen-openapi
+	go install github.com/envoyproxy/protoc-gen-validate
+	go install github.com/google/wire/cmd/wire
+
 }
 
 new(){
@@ -60,7 +63,6 @@ config(){
 	       --proto_path=./third_party \
  	       --go_out=paths=source_relative:./app/${serviceName}/internal \
 	       ${INTERNAL_PROTO_FILES}
-  exit
 }
 
 api(){
@@ -73,35 +75,33 @@ api(){
  	       --go-grpc_out=paths=source_relative:. \
  	       --openapi_out=fq_schema_naming=true,default_response=false:./doc \
 	       ${API_PROTO_FILES}
-  exit
 }
 
 buildlocal(){
   mkdir -p ./bin && go build -ldflags "-X main.Version=${VERSION}" -o ./bin/${serviceName} ./app/${serviceName}/cmd/${serviceName}/main.go ./app/${serviceName}/cmd/${serviceName}/wire_gen.go
-  exit
 }
 
 buildlinux(){
   mkdir -p ./bin && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X main.Version=${VERSION}" -o ./bin/${serviceName} ./app/${serviceName}/cmd/${serviceName}/main.go ./app/${serviceName}/cmd/${serviceName}/wire_gen.go
-  exit
+}
+
+deploydev(){
+  scp ./bin/${serviceName} root@10.189.224.86:/home/appuser/
 }
 
 generate(){
   go mod tidy
-	go get github.com/google/wire/cmd/wire@latest
+	go get github.com/google/wire/cmd/wire
 	go generate ./app/${serviceName}/...
-	exit
 }
 
 start(){
   cd ./app/${serviceName}/cmd/${serviceName}/
   go run main.go wire_gen.go
-  exit
 }
 
 add(){
   kratos proto add api/${serviceName}/v1/${arg}.proto
-  exit
 }
 
 apiclient(){
@@ -114,12 +114,10 @@ apiclient(){
  	       --go-grpc_out=paths=source_relative:. \
  	       --openapi_out=fq_schema_naming=true,default_response=false:./doc \
 	       api/${serviceName}/v1/${arg}.proto
-  exit
 }
 
 apiserver(){
   kratos proto server api/${serviceName}/v1/${arg}.proto -t app/${serviceName}/internal/service
-  exit
 }
 
 apicommon(){
@@ -128,7 +126,6 @@ apicommon(){
 	       --proto_path=./third_party \
  	       --go_out=paths=source_relative:. \
          api/common/common.proto
-  exit
 }
 
 apierror(){
@@ -137,13 +134,13 @@ apierror(){
          --go_out=paths=source_relative:. \
          --go-errors_out=paths=source_relative:. \
          api/error/error.proto
-  exit
 }
 
 
 case ${cmd} in
   (init)
     init
+    exit
     ;;
   (new)
     if [ $# -ne 2 ]; then
@@ -151,6 +148,7 @@ case ${cmd} in
       exit
     fi
     new
+    exit
     ;;
   (config)
     if [ $# -ne 2 ]; then
@@ -158,6 +156,7 @@ case ${cmd} in
       exit
     fi
     config
+    exit
     ;;
   (api)
     if [ $# -ne 2 ]; then
@@ -165,6 +164,7 @@ case ${cmd} in
       exit
     fi
     api
+    exit
     ;;
   (buildlocal)
     if [ $# -ne 2 ]; then
@@ -172,6 +172,7 @@ case ${cmd} in
       exit
     fi
     buildlocal
+    exit
     ;;
   (buildlinux)
     if [ $# -ne 2 ]; then
@@ -179,13 +180,24 @@ case ${cmd} in
       exit
     fi
     buildlinux
+    exit
     ;;
-  (generate)
+  (deploydev)
     if [ $# -ne 2 ]; then
       echo "args {2} not found"
       exit
     fi
+    buildlinux
+    deploydev
+    exit
+    ;;
+  (generate)
+    if [ $# -ne 2 ]; then
+      echo "args -ne {2} , faild"
+      exit
+    fi
     generate
+    exit
     ;;
   (start)
     if [ $# -ne 2 ]; then
@@ -193,6 +205,7 @@ case ${cmd} in
       exit
     fi
     start
+    exit
     ;;
   (add)
     if [ $# -ne 3 ]; then
@@ -200,6 +213,7 @@ case ${cmd} in
       exit
     fi
     add
+    exit
     ;;
   (apiclient)
     if [ $# -ne 3 ]; then
@@ -207,6 +221,7 @@ case ${cmd} in
       exit
     fi
     apiclient
+    exit
     ;;
   (apiserver)
     if [ $# -ne 3 ]; then
@@ -214,12 +229,15 @@ case ${cmd} in
       exit
     fi
     apiserver
+    exit
     ;;
   (apicommon)
     apicommon
+    exit
     ;;
   (apierror)
     apierror
+    exit
     ;;
   (all)
     if [ $# -ne 2 ]; then
@@ -230,8 +248,10 @@ case ${cmd} in
     api
     config
     generate
+    exit
     ;;
   (*)
     needhelp
+    exit
     ;;
 esac

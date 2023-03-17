@@ -1,6 +1,9 @@
 package util
 
-import "strconv"
+import (
+	"fmt"
+	"strconv"
+)
 
 func StringToInt64(in string) (out int64, err error) {
 	out, err = strconv.ParseInt(in, 10, 64)
@@ -25,5 +28,37 @@ func Uint64ToString(in uint64) (out string) {
 }
 func IntToString(in int) (out string) {
 	out = strconv.Itoa(in)
+	return
+}
+func Float64ToString(in float64) (out string) {
+	out = strconv.FormatFloat(in, 'f', -1, 32)
+	return
+}
+func StringToFloat64(in string) (out float64, err error) {
+	out, err = strconv.ParseFloat(in, 64)
+	return
+}
+func InterfaceNumToInt64(in interface{}) (out int64, err error) {
+	var (
+		f  float64
+		ok bool
+	)
+	if f, ok = in.(float64); !ok {
+		err = fmt.Errorf("float64 judge err")
+		return
+	}
+	out, err = StringToInt64(Float64ToString(f))
+	return
+}
+func InterfaceNumToString(in interface{}) (out string, err error) {
+	var (
+		f  float64
+		ok bool
+	)
+	if f, ok = in.(float64); !ok {
+		err = fmt.Errorf("float64 judge err")
+		return
+	}
+	out = Float64ToString(f)
 	return
 }

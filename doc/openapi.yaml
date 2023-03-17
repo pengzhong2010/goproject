@@ -15,7 +15,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.thinktank.v1.CreateTodoRequest'
+                            $ref: '#/components/schemas/api.todo.v1.CreateTodoRequest'
                 required: true
             responses:
                 "200":
@@ -23,25 +23,26 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.thinktank.v1.UpdateResp'
+                                $ref: '#/components/schemas/api.todo.v1.CreateTodoReply'
     /todo/delete:
         delete:
             tags:
                 - Todo
             operationId: Todo_DeleteTodo
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.thinktank.v1.IDReq'
-                required: true
+            parameters:
+                - name: id
+                  in: query
+                  description: id
+                  schema:
+                    type: integer
+                    format: int64
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.thinktank.v1.UpdateResp'
+                                $ref: '#/components/schemas/api.common.UpdateResp'
     /todo/get:
         get:
             tags:
@@ -60,7 +61,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.thinktank.v1.GetTodoReply'
+                                $ref: '#/components/schemas/api.todo.v1.GetTodoReply'
     /todo/list:
         get:
             tags:
@@ -72,7 +73,7 @@ paths:
                   description: id
                   schema:
                     type: integer
-                    format: int64
+                    format: int32
                 - name: key
                   in: query
                   description: 模糊搜索
@@ -88,13 +89,13 @@ paths:
                   description: 分页
                   schema:
                     type: integer
-                    format: int64
+                    format: int32
                 - name: pageNum
                   in: query
                   description: 分页
                   schema:
                     type: integer
-                    format: int64
+                    format: int32
                 - name: orderby
                   in: query
                   description: 排序字段
@@ -117,7 +118,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.thinktank.v1.ListTodoReply'
+                                $ref: '#/components/schemas/api.todo.v1.ListTodoReply'
     /todo/update:
         put:
             tags:
@@ -127,7 +128,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.thinktank.v1.UpdateTodoRequest'
+                            $ref: '#/components/schemas/api.todo.v1.UpdateTodoRequest'
                 required: true
             responses:
                 "200":
@@ -135,10 +136,23 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.thinktank.v1.UpdateResp'
+                                $ref: '#/components/schemas/api.common.UpdateResp'
 components:
     schemas:
-        api.thinktank.v1.CreateTodoRequest:
+        api.common.UpdateResp:
+            type: object
+            properties:
+                message:
+                    type: string
+                    description: 返回信息
+        api.todo.v1.CreateTodoReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    description: id
+                    format: int32
+        api.todo.v1.CreateTodoRequest:
             type: object
             properties:
                 title:
@@ -147,13 +161,13 @@ components:
                 detail:
                     type: string
                     description: detail
-        api.thinktank.v1.GetTodoReply:
+        api.todo.v1.GetTodoReply:
             type: object
             properties:
                 id:
                     type: integer
                     description: id
-                    format: int64
+                    format: int32
                 uuid:
                     type: string
                     description: uuid
@@ -166,35 +180,28 @@ components:
                 ctime:
                     type: integer
                     description: 创建时间
-                    format: int64
+                    format: int32
                 mtime:
                     type: integer
                     description: 修改时间
-                    format: int64
-        api.thinktank.v1.IDReq:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    description: id
-                    format: int64
-        api.thinktank.v1.ListTodoReply:
+                    format: int32
+        api.todo.v1.ListTodoReply:
             type: object
             properties:
                 data:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.thinktank.v1.TodoForList'
+                        $ref: '#/components/schemas/api.todo.v1.TodoForList'
                 count:
                     type: integer
-                    format: int64
-        api.thinktank.v1.TodoForList:
+                    format: int32
+        api.todo.v1.TodoForList:
             type: object
             properties:
                 id:
                     type: integer
                     description: id
-                    format: int64
+                    format: int32
                 uuid:
                     type: string
                     description: uuid
@@ -204,24 +211,18 @@ components:
                 ctime:
                     type: integer
                     description: 创建时间
-                    format: int64
+                    format: int32
                 mtime:
                     type: integer
                     description: 修改时间
-                    format: int64
-        api.thinktank.v1.UpdateResp:
-            type: object
-            properties:
-                message:
-                    type: string
-                    description: 返回信息
-        api.thinktank.v1.UpdateTodoRequest:
+                    format: int32
+        api.todo.v1.UpdateTodoRequest:
             type: object
             properties:
                 id:
                     type: integer
                     description: id
-                    format: int64
+                    format: int32
                 title:
                     type: string
                     description: title
