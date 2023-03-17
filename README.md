@@ -1,5 +1,7 @@
 # Goproject
 
+golang program one store develop way
+
 go语言大仓开发模式仓库
 
 # Quickstart
@@ -26,12 +28,14 @@ if `windows` recommend `git-bash` for cmdline tool
 ```
 ## add new file api 
 ```shell
+# make file ./api/{myapp}/v1/{myapp.proto}
 ./ase add {myapp} {myapi}
 ```
 ## edit api
 edit file ./api/{myapp}/v1/{myapi}.proto
 ## make proto file 
 ```shell
+# make file ./api/{mysql}/v1/{myapp}_xxx.pb.go
 ./ase apiclient {myapp} {myapi}
 ```
 ## make proto error file
