@@ -2,6 +2,7 @@ package util
 
 import (
 	"bytes"
+	"compress/gzip"
 	"crypto/aes"
 	"crypto/cipher"
 	"encoding/base64"
@@ -62,5 +63,38 @@ func Base64Decrypt(input string) (output []byte, err error) {
 		return
 	}
 	output, err = base64.StdEncoding.DecodeString(input)
+	return
+}
+
+//gzip压缩
+func MarshalToJsonWithGzip(in []byte) (out []byte, err error) {
+	var buf bytes.Buffer
+	gzipWiter := gzip.NewWriter(&buf)
+	_, err = gzipWiter.Write(in)
+	if err != nil {
+		return
+	}
+	err = gzipWiter.Close()
+	if err != nil {
+		return
+	}
+	out = buf.Bytes()
+	return
+}
+
+//gzip解压
+func UnmarshalDataFromJsonWithGzip(in []byte) (out []byte, err error) {
+	bytesReader := bytes.NewReader(in)
+	gzipReader, err := gzip.NewReader(bytesReader)
+	if err != nil {
+		return
+	}
+	defer gzipReader.Close()
+	buf := new(bytes.Buffer)
+	_, err = buf.ReadFrom(gzipReader)
+	if err != nil {
+		return
+	}
+	out = buf.Bytes()
 	return
 }
