@@ -90,9 +90,11 @@ deploydev(){
 }
 
 generate(){
-  go mod tidy
-	go get github.com/google/wire/cmd/wire
-	go generate ./app/${serviceName}/...
+#  go mod tidy
+#	go get github.com/google/wire/cmd/wire
+#	go generate ./app/${serviceName}/...
+  cd ./app/${serviceName}/cmd/${serviceName}
+  wire
 }
 
 start(){

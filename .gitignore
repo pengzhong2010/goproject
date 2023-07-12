@@ -36,5 +36,3 @@ bin/
 *.swp
 
 cache
-*.yaml
-*.comment.sh

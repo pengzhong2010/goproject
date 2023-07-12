@@ -1,0 +1,31 @@
+server:
+  app:
+    name: demo
+    version: v0.0.1
+  http:
+    addr: 0.0.0.0:8000
+    timeout: 1s
+  grpc:
+    addr: 0.0.0.0:9000
+    timeout: 1s
+data:
+  mysql:
+    dsn: root:caidaoninb@tcp(127.0.0.1:33306)/todo?charset=utf8mb4&parseTime=True&loc=Local
+    active: 20
+    idle: 10
+    idle_timeout: 14400s
+#    queryTimeout: 20000ms
+    exec_timeout: 3600s
+#    tranTimeout: 20000ms
+  redis:
+    network: tcp
+    addr: r-uf664ifjlxur6i23di.redis.rds.aliyuncs.com:6379
+    password: 8NSzm2Npis9Nfl4
+    db_num: 1
+    active: 10
+    idle: 10
+    dial_timeout: 2s
+    max_conn_lifetime: 3600s
+    read_timeout: 5s
+    write_timeout: 3s
+    idle_timeout: 10s
