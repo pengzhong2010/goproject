@@ -10,15 +10,15 @@ type Redis struct {
 	pool *redis.Pool
 }
 
-func NewRedis(network, addr, password string, dbNum, idle, active int64, dialTimeout, MaxConnLifetime time.Duration) (*Redis, func()) {
+func NewRedis(network, addr, password string, dbNum, idle, active int64, dialTimeout, MaxConnLifetime, readTimeout, writeTimeout, idleTimeout time.Duration) (*Redis, func()) {
 	db := &Redis{}
 	db.pool = &redis.Pool{
 		MaxIdle:         int(idle),
 		MaxActive:       int(active),
-		IdleTimeout:     dialTimeout,
+		IdleTimeout:     idleTimeout,
 		MaxConnLifetime: MaxConnLifetime,
 		Dial: func() (redis.Conn, error) {
-			c, err := redis.Dial(network, addr)
+			c, err := redis.Dial(network, addr, redis.DialWriteTimeout(writeTimeout), redis.DialReadTimeout(readTimeout))
 			if err != nil {
 				return nil, err
 			}

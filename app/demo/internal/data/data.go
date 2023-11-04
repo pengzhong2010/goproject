@@ -118,6 +118,6 @@ func NewMysqlClient(c *conf.Data) (db *gorm.DB, cf func(), err error) {
 }
 
 func NewRedisClient(c *conf.Data) (db *redis.Redis, cf func(), err error) {
-	db, cf = redis.NewRedis(c.Redis.Network, c.Redis.Addr, c.Redis.Password, c.Redis.DbNum, c.Redis.Idle, c.Redis.Active, c.Redis.DialTimeout.AsDuration(), c.Redis.MaxConnLifetime.AsDuration())
+	db, cf = redis.NewRedis(c.Redis.Network, c.Redis.Addr, c.Redis.Password, c.Redis.DbNum, c.Redis.Idle, c.Redis.Active, c.Redis.DialTimeout.AsDuration(), c.Redis.MaxConnLifetime.AsDuration(), c.Redis.ReadTimeout.AsDuration(), c.Redis.WriteTimeout.AsDuration(), c.Redis.IdleTimeout.AsDuration())
 	return
 }
